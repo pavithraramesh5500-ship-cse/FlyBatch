@@ -1123,17 +1123,6 @@ ic3270:
 names:
 	$(PYTHON) tests/run_names.py
 
-# D-249.  data/networks/*.bin is gitignored (322 MB), so a fresh clone or
-# worktree starts without it and the first symptom is ONF103E raised four
-# frames deep inside run_req.  This links the networks in from the main
-# checkout or a sibling worktree, verifying every candidate against
-# MANIFEST.json -- bytes, CRC-32 and SHA-256 -- before linking it and
-# again afterwards.
-#
-# Deliberately NOT a prerequisite of `test`: it reaches outside this
-# checkout, and a test target must not do that on its own.  Run it when
-# `test` complains, or `fixtures-check` to diagnose without changing
-# anything.
 # D-388, D-389: the two recorded clips of the Phase G live view, both from
 # real engine streams.  `short` is the explainer -- 60 ms at K=5, where the
 # arrival, the propagation and MN9 crossing threshold at 25.8 ms are all
@@ -1167,6 +1156,20 @@ demo-linux: eng
 
 demo-windows: eng
 	vhs tools/demo/demo.tape
+
+
+# D-249. data/networks/*.bin is gitignored (322 MB), so a fresh clone or
+# worktree starts without it and the first symptom is ONF103E raised four
+# frames deep inside run_req. This copies the networks in from the main
+# checkout or a sibling worktree, verifying every candidate against
+# MANIFEST.json -- bytes, CRC-32 and SHA-256 -- before copying it and
+# again afterwards. Hard-linking is opt-in with --link.
+#
+# Deliberately NOT a prerequisite of `test`: it reaches outside this
+# checkout, and a test target must not do that on its own. Run it when
+# `test` complains, or `fixtures-check` to diagnose without changing
+# anything.
+
 
 fixtures:
 	$(PYTHON) tools/fixtures.py
